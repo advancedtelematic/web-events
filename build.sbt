@@ -1,4 +1,4 @@
-name := "web_events"
+name := "web-events"
 organization := "com.advancedtelematic"
 scalaVersion := "2.12.2"
 
