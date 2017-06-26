@@ -31,6 +31,7 @@ trait Messages {
   case class DeviceSeen(namespace: String, uuid: String, lastSeen: String)
   case class DeviceCreated(namespace: String, uuid: String, deviceName: String, deviceId: Option[String],
                            deviceType: String, timestamp: String)
+  case class DeviceUpdateStatus(namespace: String, device: String, status: String, timestamp: String)
   case class PackageCreated(namespace: String, packageId: PackageId, description: Option[String],
                             vendor: Option[String], signature: Option[String], timestamp: String)
   case class PackageBlacklisted(namespace: String, packageId: PackageId, timestamp: String)
@@ -38,6 +39,7 @@ trait Messages {
 
   implicit val deviceSeenMessageLike = MessageLike[DeviceSeen](_.uuid)
   implicit val deviceCreatedMessageLike = MessageLike[DeviceCreated](_.uuid)
+  implicit val deviceUpdateStatusMessageLike = MessageLike[DeviceUpdateStatus](_.device)
   implicit val packageCreatedMessageLike = MessageLike[PackageCreated](_.packageId.mkString)
   implicit val blacklistedPackageMessageLike = MessageLike[PackageBlacklisted](_.packageId.mkString)
   implicit val updateSpecMessageLike = MessageLike[UpdateSpec](_.device.toString)
@@ -72,6 +74,10 @@ object Boot extends BootApp
   val deviceCreatedlistener = system.actorOf(MessageListener.props[DeviceCreated](config,
     WebMessageBusListener.action[DeviceCreated]), "device-created")
   deviceCreatedlistener ! Subscribe
+
+  val deviceUpdateStatuslistener = system.actorOf(MessageListener.props[DeviceUpdateStatus](config,
+    WebMessageBusListener.action[DeviceUpdateStatus]), "device-update-status")
+  deviceUpdateStatuslistener ! Subscribe
 
   val packageCreatedlistener = system.actorOf(MessageListener.props[PackageCreated](config,
     WebMessageBusListener.action[PackageCreated]), "package-created")
