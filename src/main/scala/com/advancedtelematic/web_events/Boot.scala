@@ -13,6 +13,7 @@ import com.advancedtelematic.libats.monitoring.MetricsSupport
 import com.advancedtelematic.web_events.daemon.WebMessageBusListener
 import com.advancedtelematic.web_events.http.WebEventsRoutes
 import com.typesafe.config.ConfigFactory
+import io.circe.Json
 
 // simpler versions of the messages with stringly types
 trait Messages {
@@ -36,6 +37,7 @@ trait Messages {
                             vendor: Option[String], signature: Option[String], timestamp: String)
   case class PackageBlacklisted(namespace: String, packageId: PackageId, timestamp: String)
   case class UpdateSpec(namespace: String, device: String, packageUuid: String, status: String, timestamp: String)
+  case class TufTargetAdded(namespace: String, filename: String, checksum: Json, length: Long, custom: Option[Json])
 
   implicit val deviceSeenMessageLike = MessageLike[DeviceSeen](_.uuid)
   implicit val deviceCreatedMessageLike = MessageLike[DeviceCreated](_.uuid)
@@ -43,6 +45,7 @@ trait Messages {
   implicit val packageCreatedMessageLike = MessageLike[PackageCreated](_.packageId.mkString)
   implicit val blacklistedPackageMessageLike = MessageLike[PackageBlacklisted](_.packageId.mkString)
   implicit val updateSpecMessageLike = MessageLike[UpdateSpec](_.device.toString)
+  implicit val tufTargetAddedMessageLike = MessageLike[TufTargetAdded](_.filename)
 }
 
 trait Settings {
@@ -90,6 +93,10 @@ object Boot extends BootApp
   val updateSpeclistener = system.actorOf(MessageListener.props[UpdateSpec](config,
     WebMessageBusListener.action[UpdateSpec]), "update-spec")
   updateSpeclistener ! Subscribe
+
+  val tufTargetAddedlistener = system.actorOf(MessageListener.props[TufTargetAdded](config,
+    WebMessageBusListener.action[TufTargetAdded]), "tuf-target-added")
+  tufTargetAddedlistener ! Subscribe
 
   val routes: Route =
     (versionHeaders(version) & logResponseMetrics(projectName)) {
