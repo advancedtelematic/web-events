@@ -31,8 +31,10 @@ class WebSocketResource(messageBusProvider: MessageSourceProvider)
 
     val sources = getSource[DeviceSeen](_.namespace)
       .merge(getSource[DeviceCreated](_.namespace))
+      .merge(getSource[DeviceUpdateStatus](_.namespace))
       .merge(getSource[PackageCreated](_.namespace))
       .merge(getSource[PackageBlacklisted](_.namespace))
+      .merge(getSource[TufTargetAdded](_.namespace))
       .merge(getSource[UpdateSpec](_.namespace))
 
     Flow.fromSinkAndSource(Sink.ignore, sources)
