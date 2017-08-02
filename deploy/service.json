@@ -1,9 +1,9 @@
-{
+[{
   "id": "${JOB_NAME}",
   "uris": ["/root/docker.tar.gz"],
   "constraints": [["rack_id", "CLUSTER", "stateless"]],
-  "cpus": $USE_CPU,
-  "mem": $USE_MEM,
+  "cpus": 0.2,
+  "mem": 1048,
   "instances": 1,
   "container": {
     "type": "DOCKER",
@@ -13,25 +13,37 @@
       "forcePullImage": true,
       "network": "BRIDGE",
       "portMappings": [{
-        "containerPort": 8084,
+        "containerPort": 9001,
         "hostPort": 0,
         "protocol": "tcp"
       }]
     }
   },
   "env": {
+    "AUTH_PLUS_CLIENT_ID": "${AUTH_PLUS_CLIENT_ID}",
+    "AUTH_PLUS_CLIENT_SECRET": "${AUTH_PLUS_CLIENT_SECRET}",
+    "AUTH_PLUS_HOST": "${AUTH_PLUS_HOST}",
+    "AUTH_PLUS_PORT": "${AUTH_PLUS_PORT}",
+    "AUTH_PLUS_SCHEME": "${AUTH_PLUS_SCHEME}",
+    "AUTH_PROTOCOL": "oauth.accesstoken",
+    "AUTH_VERIFICATION": "auth-plus",
+    "BIND_HOST": "0.0.0.0",
+    "BIND_PORT": "9001",
+    "ENV_PREFIX": "${ENV_PREFIX}",
+    "JWT_SECRET": "${JWT_SECRET}",
+    "KAFKA_BOOTSTRAP_SERVERS": "${KAFKA_BOOTSTRAP_SERVERS}",
+    "KAFKA_HOST": "${KAFKA_HOST}",
+    "KAFKA_TOPIC_SUFFIX": "${KAFKA_TOPIC_SUFFIX}",
+    "PACKAGES_VERSION_FORMAT": "${PACKAGES_VERSION_FORMAT}",
     "SERVICE_NAME": "${JOB_NAME}",
     "SERVICE_SCOPE": "public",
     "SERVICE_TYPE": "websockets",
     "SERVICE_IMAGE": "${IMAGE_ARTIFACT}",
-    "SERVICE_HEALTH_CHECK": "curl --show-error --silent %<host>s:%<port>s/health",
-    "AUTH_VERIFICATION": "auth-plus",
-    "AUTH_PROTOCOL": "oauth.accesstoken",
-    "JAVA_OPTS": "${JAVA_OPTS}"
+    "SERVICE_HEALTH_CHECK": "curl --show-error --silent %<host>s:%<port>s/health"
   },
   "healthChecks": [{
     "protocol": "HTTP",
     "path": "/health",
     "intervalSeconds": 30
   }]
-}
+}]
