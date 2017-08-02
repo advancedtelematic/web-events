@@ -4,9 +4,9 @@ scalaVersion := "2.12.2"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8", "-Ypartial-unification")
 
-resolvers += "ATS Releases" at "http://nexus.prod01.internal.advancedtelematic.com:8081/content/repositories/releases"
+resolvers += "ATS Releases" at "http://nexus.advancedtelematic.com:8081/content/repositories/releases"
 
-resolvers += "ATS Snapshots" at "http://nexus.prod01.internal.advancedtelematic.com:8081/content/repositories/snapshots"
+resolvers += "ATS Snapshots" at "http://nexus.advancedtelematic.com:8081/content/repositories/snapshots"
 
 libraryDependencies ++= {
   val akkaV = "2.5.1"
