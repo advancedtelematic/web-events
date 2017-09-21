@@ -94,7 +94,13 @@ class BasicAuthTokenValidator(implicit system: ActorSystem, mat: Materializer) e
             }
           case Success(false) =>
             logger.info("auth-plus rejects the token")
-            reject(AuthorizationFailedRejection)
+            // Return 401 instead of 403 (AuthorizationFailedRejection) so that browser will clear its cache (PRO-3953)
+            reject(AuthenticationFailedRejection(
+                CredentialsRejected,
+                HttpChallenge(
+                  "Bearer", "auth-plus",
+                  Map("error" -> "invalid_token", "error_description" -> "Unknown or expired token")))
+            )
           case Failure(err) =>
             logger.info(s"Couldn't connect with auth-plus (will try local validation): ${err.toString}")
             localValidate
