@@ -120,4 +120,14 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
       wsClient.expectCompletion()
     }
   }
+
+  test("Handle URL-encoded basic auth from Firefox") {
+    val wsClient = WSProbe()
+
+    val basicAuth = BasicHttpCredentials("bearer", generateKeyJws.value.replace(".", "%2E"))
+    WS("/events/ws", wsClient.flow).addCredentials(basicAuth) ~> wsRoute ~> check {
+
+      isWebSocketUpgrade shouldEqual true
+    }
+  }
 }

@@ -75,7 +75,8 @@ class BasicAuthTokenValidator(implicit system: ActorSystem, mat: Materializer) e
     extractCredentials.flatMap {
       // bearer authentication mapped to basic auth with token in password position
       case Some(BasicHttpCredentials(_, token)) =>
-        provide(token)
+        // Do URL-decoding to workaround Firefox issue (PRO-3953)
+        provide(java.net.URLDecoder.decode(token, "UTF-8"))
       case _ =>
         reject(AuthenticationFailedRejection(CredentialsMissing, HttpChallenges.basic(realm)))
     }
