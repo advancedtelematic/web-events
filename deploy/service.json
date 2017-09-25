@@ -10,7 +10,7 @@
     "docker": {
       "image": "${IMAGE_ARTIFACT}",
       "parameters": [{"key": "log-driver", "value": "syslog"},
-                     {"key": "log-opt", "value": "tag=${JOB_NAME}"}],
+                     {"key": "log-opt", "value": "tag=${SERVICE_NAME}"}],
       "forcePullImage": true,
       "network": "BRIDGE",
       "portMappings": [{
@@ -36,7 +36,7 @@
     "KAFKA_HOST": "${KAFKA_HOST}",
     "KAFKA_TOPIC_SUFFIX": "${KAFKA_TOPIC_SUFFIX}",
     "PACKAGES_VERSION_FORMAT": ".+",
-    "SERVICE_NAME": "${JOB_NAME}",
+    "SERVICE_NAME": "${SERVICE_NAME}",
     "SERVICE_SCOPE": "public",
     "SERVICE_TYPE": "websockets",
     "SERVICE_IMAGE": "${IMAGE_ARTIFACT}",
