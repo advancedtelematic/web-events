@@ -23,7 +23,7 @@ class WebEventsRoutes()
       ErrorHandler.handleErrors {
         pathPrefix("api" / "v1") {
           new WebSocketResource(messageBusProvider).route
-        } ~ new HealthResource(Seq.empty, versionMap).route
+        } ~ new HealthResource(versionMap).route
       }
     }
 }

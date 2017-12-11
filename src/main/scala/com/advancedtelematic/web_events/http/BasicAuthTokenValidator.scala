@@ -23,9 +23,9 @@ import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.{Decoder, Json}
 import org.apache.commons.codec.binary.Base64
-import com.advancedtelematic.libats.data.Namespace
 import org.slf4j.LoggerFactory
 import com.advancedtelematic.jwt.JsonWebToken
+import com.advancedtelematic.libats.data.DataType.Namespace
 import com.advancedtelematic.web_events.Settings
 
 import scala.concurrent.{ExecutionContext, Future}
