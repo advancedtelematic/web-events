@@ -6,11 +6,11 @@ import akka.http.scaladsl.server.{Directives, Route}
 import com.advancedtelematic.libats.http.BootApp
 import com.advancedtelematic.libats.http.LogDirectives.logResponseMetrics
 import com.advancedtelematic.libats.http.VersionDirectives.versionHeaders
+import com.advancedtelematic.libats.http.monitoring.MetricsSupport
 import com.advancedtelematic.libats.messaging.MessageListener
-import com.advancedtelematic.libats.messaging.Messages._
-import com.advancedtelematic.libats.messaging.daemon.MessageBusListenerActor.Subscribe
-import com.advancedtelematic.libats.monitoring.MetricsSupport
+import com.advancedtelematic.libats.messaging_datatype.MessageLike
 import com.advancedtelematic.web_events.daemon.WebMessageBusListener
+import com.advancedtelematic.libats.messaging.daemon.MessageBusListenerActor.Subscribe
 import com.advancedtelematic.web_events.http.WebEventsRoutes
 import com.typesafe.config.ConfigFactory
 import io.circe.Json
@@ -68,34 +68,37 @@ object Boot extends BootApp
   with MetricsSupport
   with Messages {
 
+  // SI-1938
+  override lazy val config = ConfigFactory.load()
+
   log.info(s"Starting $version on http://$host:$port")
 
   val deviceSeenlistener = system.actorOf(MessageListener.props[DeviceSeen](config,
-    WebMessageBusListener.action[DeviceSeen]), "device-seen")
+    WebMessageBusListener.action[DeviceSeen], metricRegistry), "device-seen")
   deviceSeenlistener ! Subscribe
 
   val deviceCreatedlistener = system.actorOf(MessageListener.props[DeviceCreated](config,
-    WebMessageBusListener.action[DeviceCreated]), "device-created")
+    WebMessageBusListener.action[DeviceCreated], metricRegistry), "device-created")
   deviceCreatedlistener ! Subscribe
 
   val deviceUpdateStatuslistener = system.actorOf(MessageListener.props[DeviceUpdateStatus](config,
-    WebMessageBusListener.action[DeviceUpdateStatus]), "device-update-status")
+    WebMessageBusListener.action[DeviceUpdateStatus], metricRegistry), "device-update-status")
   deviceUpdateStatuslistener ! Subscribe
 
   val packageCreatedlistener = system.actorOf(MessageListener.props[PackageCreated](config,
-    WebMessageBusListener.action[PackageCreated]), "package-created")
+    WebMessageBusListener.action[PackageCreated], metricRegistry), "package-created")
   packageCreatedlistener ! Subscribe
 
   val packageBlacklistedlistener = system.actorOf(MessageListener.props[PackageBlacklisted](config,
-    WebMessageBusListener.action[PackageBlacklisted]), "package-blacklisted")
+    WebMessageBusListener.action[PackageBlacklisted], metricRegistry), "package-blacklisted")
   packageBlacklistedlistener ! Subscribe
 
   val updateSpeclistener = system.actorOf(MessageListener.props[UpdateSpec](config,
-    WebMessageBusListener.action[UpdateSpec]), "update-spec")
+    WebMessageBusListener.action[UpdateSpec], metricRegistry), "update-spec")
   updateSpeclistener ! Subscribe
 
   val tufTargetAddedlistener = system.actorOf(MessageListener.props[TufTargetAdded](config,
-    WebMessageBusListener.action[TufTargetAdded]), "tuf-target-added")
+    WebMessageBusListener.action[TufTargetAdded], metricRegistry), "tuf-target-added")
   tufTargetAddedlistener ! Subscribe
 
   val routes: Route =

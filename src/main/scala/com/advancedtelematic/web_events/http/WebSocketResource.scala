@@ -4,10 +4,10 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.model.ws.{Message, TextMessage}
 import akka.stream.Materializer
 import akka.stream.scaladsl.{Flow, Sink, Source}
+import com.advancedtelematic.libats.data.DataType.Namespace
 import com.advancedtelematic.web_events.daemon.MessageSourceProvider
 import io.circe.Json
-import com.advancedtelematic.libats.data.Namespace
-import com.advancedtelematic.libats.messaging.Messages.MessageLike
+import com.advancedtelematic.libats.messaging_datatype.MessageLike
 import com.advancedtelematic.web_events._
 
 import scala.concurrent.ExecutionContext

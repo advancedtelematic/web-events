@@ -2,7 +2,7 @@ package com.advancedtelematic.web_events.daemon
 
 import akka.Done
 import akka.actor.ActorSystem
-import com.advancedtelematic.libats.messaging.Messages.MessageLike
+import com.advancedtelematic.libats.messaging_datatype.MessageLike
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.Future

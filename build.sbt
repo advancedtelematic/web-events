@@ -1,6 +1,6 @@
 name := "web-events"
 organization := "com.advancedtelematic"
-scalaVersion := "2.12.2"
+scalaVersion := "2.12.4"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8", "-Ypartial-unification")
 
@@ -9,10 +9,10 @@ resolvers += "ATS Releases" at "http://nexus.advancedtelematic.com:8081/content/
 resolvers += "ATS Snapshots" at "http://nexus.advancedtelematic.com:8081/content/repositories/snapshots"
 
 libraryDependencies ++= {
-  val akkaV = "2.5.1"
-  val akkaHttpV = "10.0.6"
-  val scalaTestV = "3.0.0"
-  val libatsV = "0.0.1-63-g8dcff8c"
+  val akkaV = "2.5.7"
+  val akkaHttpV = "10.0.10"
+  val scalaTestV = "3.0.4"
+  val libatsV = "0.1.1-1-gf9dc44c"
   val jwsV = "0.4.5"
 
   Seq(
@@ -23,7 +23,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-slf4j" % akkaV,
     "org.scalatest"     %% "scalatest" % scalaTestV % "test",
 
-    "ch.qos.logback" % "logback-classic" % "1.1.3",
+    "ch.qos.logback" % "logback-classic" % "1.2.3",
 
     "com.advancedtelematic" %% "libats" % libatsV,
     "com.advancedtelematic" %% "libats-messaging" % libatsV,

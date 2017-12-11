@@ -10,7 +10,6 @@ import akka.http.scaladsl.model.headers.BasicHttpCredentials
 import akka.http.scaladsl.model.ws.{Message, TextMessage}
 import akka.http.scaladsl.testkit.WSProbe
 import akka.stream.scaladsl.Source
-import com.advancedtelematic.libats.messaging.Messages.MessageLike
 import com.advancedtelematic.web_events.Messages
 import com.advancedtelematic.json.signature.JcaSupport._
 import com.advancedtelematic.jwa.{HS256, Hmac}
@@ -19,6 +18,7 @@ import com.advancedtelematic.jwk.KeyOperations.{Sign, _}
 import com.advancedtelematic.jwk.KeyTypes.Octet
 import com.advancedtelematic.jws.{JwsPayload, _}
 import com.advancedtelematic.jwt.{JsonWebToken, _}
+import com.advancedtelematic.libats.messaging_datatype.MessageLike
 import com.advancedtelematic.util.ResourceSpec
 import com.advancedtelematic.web_events.daemon.MessageSourceProvider
 import com.typesafe.config.ConfigFactory
