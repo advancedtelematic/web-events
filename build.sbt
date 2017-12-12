@@ -19,7 +19,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-actor" % akkaV,
     "com.typesafe.akka" %% "akka-stream" % akkaV,
     "com.typesafe.akka" %% "akka-http-core" % akkaHttpV,
-    "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpV,
+    "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpV % "test",
     "com.typesafe.akka" %% "akka-slf4j" % akkaV,
     "org.scalatest"     %% "scalatest" % scalaTestV % "test",
 
@@ -33,6 +33,8 @@ libraryDependencies ++= {
     "commons-codec" % "commons-codec" % "1.10"
   )
 }
+
+dependencyOverrides += "com.typesafe.akka" %% "akka-stream-kafka" % "0.18"
 
 enablePlugins(BuildInfoPlugin)
 
@@ -72,4 +74,3 @@ Versioning.settings
 Release.settings
 
 enablePlugins(Versioning.Plugin)
-
