@@ -44,6 +44,7 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
 
   val deviceSeenMessage = DeviceSeen(namespace, deviceUuid, lastSeen)
   val deviceCreatedMessage = DeviceCreated(namespace, deviceUuid, deviceName, deviceId, deviceType, "now")
+  val deviceSystemInfoChangedMessage = DeviceSystemInfoChanged(namespace, deviceUuid)
   val deviceUpdateStatusMessage = DeviceUpdateStatus(namespace, deviceUuid, "UpToDate", "now")
   val updateSpecMessage = UpdateSpec(namespace, deviceUuid, packageUuid, "Finished", "now")
   val packageBlacklistedMessage = PackageBlacklisted(namespace, packageId, "now")
@@ -58,6 +59,8 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
         Source.single(deviceSeenMessage.asInstanceOf[T])
       } else if(is[DeviceCreated]) {
         Source.single(deviceCreatedMessage.asInstanceOf[T])
+      } else if(is[DeviceSystemInfoChanged]) {
+        Source.single(deviceSystemInfoChangedMessage.asInstanceOf[T])
       } else if(is[DeviceUpdateStatus]) {
         Source.single(deviceUpdateStatusMessage.asInstanceOf[T])
       } else if(is[UpdateSpec]) {
@@ -107,9 +110,10 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
 
       val sub = wsClient.inProbe
 
-      sub.request(n = 7)
+      sub.request(n = 8)
       sub.expectNextUnordered(makeJson(deviceSeenMessage),
                               makeJson(deviceCreatedMessage),
+                              makeJson(deviceSystemInfoChangedMessage),
                               makeJson(deviceUpdateStatusMessage),
                               makeJson(updateSpecMessage),
                               makeJson(packageBlacklistedMessage),
