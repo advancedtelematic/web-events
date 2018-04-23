@@ -32,6 +32,7 @@ trait Messages {
   case class DeviceSeen(namespace: String, uuid: String, lastSeen: String)
   case class DeviceCreated(namespace: String, uuid: String, deviceName: String, deviceId: Option[String],
                            deviceType: String, timestamp: String)
+  case class DeviceSystemInfoChanged(namespace: String, uuid: String)
   case class DeviceUpdateStatus(namespace: String, device: String, status: String, timestamp: String)
   case class PackageCreated(namespace: String, packageId: PackageId, description: Option[String],
                             vendor: Option[String], signature: Option[String], timestamp: String)
@@ -41,6 +42,7 @@ trait Messages {
 
   implicit val deviceSeenMessageLike = MessageLike[DeviceSeen](_.uuid)
   implicit val deviceCreatedMessageLike = MessageLike[DeviceCreated](_.uuid)
+  implicit val deviceSystemInfoChangedLike = MessageLike[DeviceSystemInfoChanged](_.uuid)
   implicit val deviceUpdateStatusMessageLike = MessageLike[DeviceUpdateStatus](_.device)
   implicit val packageCreatedMessageLike = MessageLike[PackageCreated](_.packageId.mkString)
   implicit val blacklistedPackageMessageLike = MessageLike[PackageBlacklisted](_.packageId.mkString)
@@ -80,6 +82,10 @@ object Boot extends BootApp
   val deviceCreatedlistener = system.actorOf(MessageListener.props[DeviceCreated](config,
     WebMessageBusListener.action[DeviceCreated], metricRegistry), "device-created")
   deviceCreatedlistener ! Subscribe
+
+  val deviceSystemInfoChangedlistener = system.actorOf(MessageListener.props[DeviceSystemInfoChanged](config,
+    WebMessageBusListener.action[DeviceSystemInfoChanged], metricRegistry), "device-system-info-changed")
+  deviceSystemInfoChangedlistener ! Subscribe
 
   val deviceUpdateStatuslistener = system.actorOf(MessageListener.props[DeviceUpdateStatus](config,
     WebMessageBusListener.action[DeviceUpdateStatus], metricRegistry), "device-update-status")

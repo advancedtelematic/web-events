@@ -31,6 +31,7 @@ class WebSocketResource(messageBusProvider: MessageSourceProvider)
 
     val sources = getSource[DeviceSeen](_.namespace)
       .merge(getSource[DeviceCreated](_.namespace))
+      .merge(getSource[DeviceSystemInfoChanged](_.namespace))
       .merge(getSource[DeviceUpdateStatus](_.namespace))
       .merge(getSource[PackageCreated](_.namespace))
       .merge(getSource[PackageBlacklisted](_.namespace))
