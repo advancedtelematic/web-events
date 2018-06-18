@@ -41,6 +41,7 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
   val packageId = PackageId("ghc", "1.0.0")
   val packageUuid = "b82ca6a4-5422-47e0-85d0-8f931006a307"
   val cksum = Json.obj("hash" -> Json.fromString("1234"))
+  val eventUuid = "0d438395-73fa-438d-8a91-5a29515083e9"
 
   val deviceSeenMessage = DeviceSeen(namespace, deviceUuid, lastSeen)
   val deviceCreatedMessage = DeviceCreated(namespace, deviceUuid, deviceName, deviceId, deviceType, "now")
@@ -50,6 +51,7 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
   val packageBlacklistedMessage = PackageBlacklisted(namespace, packageId, "now")
   val packageCreatedMessage = PackageCreated(namespace, packageId, Some("description"), Some("ghc"), None, "now")
   val tufTargetAddedMessage = TufTargetAdded(namespace, "targetpath1", cksum, 1024, None)
+  val deviceEventMessage = DeviceEventMessage(namespace, Event(deviceUuid, eventUuid, "packageadded", Instant.now(), Instant.now(), Json.Null))
 
   val mockMsgSrc = new MessageSourceProvider {
     override def getSource[T]()(implicit system: ActorSystem, tag: ClassTag[T]): Source[T, _] = {
@@ -71,6 +73,8 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
         Source.single(packageCreatedMessage.asInstanceOf[T])
       } else if(is[TufTargetAdded]) {
         Source.single(tufTargetAddedMessage.asInstanceOf[T])
+      } else if(is[DeviceEventMessage]) {
+        Source.single(deviceEventMessage.asInstanceOf[T])
       } else { throw new IllegalArgumentException("[test] Event class not supported " +
                                                  s"${tag.runtimeClass.getSimpleName}")
       }
@@ -110,7 +114,7 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
 
       val sub = wsClient.inProbe
 
-      sub.request(n = 8)
+      sub.request(n = 9)
       sub.expectNextUnordered(makeJson(deviceSeenMessage),
                               makeJson(deviceCreatedMessage),
                               makeJson(deviceSystemInfoChangedMessage),
@@ -118,7 +122,8 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
                               makeJson(updateSpecMessage),
                               makeJson(packageBlacklistedMessage),
                               makeJson(packageCreatedMessage),
-                              makeJson(tufTargetAddedMessage))
+                              makeJson(tufTargetAddedMessage),
+                              makeJson(deviceEventMessage))
 
       wsClient.sendCompletion()
       wsClient.expectCompletion()
