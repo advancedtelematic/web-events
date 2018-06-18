@@ -37,6 +37,7 @@ class WebSocketResource(messageBusProvider: MessageSourceProvider)
       .merge(getSource[PackageBlacklisted](_.namespace))
       .merge(getSource[TufTargetAdded](_.namespace))
       .merge(getSource[UpdateSpec](_.namespace))
+      .merge(getSource[DeviceEventMessage](_.namespace))
 
     Flow.fromSinkAndSource(Sink.ignore, sources)
   }
