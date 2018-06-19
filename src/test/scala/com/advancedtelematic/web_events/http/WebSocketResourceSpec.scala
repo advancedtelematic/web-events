@@ -51,7 +51,7 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
   val packageBlacklistedMessage = PackageBlacklisted(namespace, packageId, "now")
   val packageCreatedMessage = PackageCreated(namespace, packageId, Some("description"), Some("ghc"), None, "now")
   val tufTargetAddedMessage = TufTargetAdded(namespace, "targetpath1", cksum, 1024, None)
-  val deviceEventMessage = DeviceEventMessage(namespace, Event(deviceUuid, eventUuid, "packageadded", Instant.now(), Instant.now(), Json.Null))
+  val deviceEventMessage = DeviceEventMessage(namespace, deviceUuid, eventUuid, "packageadded", Instant.now(), Instant.now(), Json.Null)
 
   val mockMsgSrc = new MessageSourceProvider {
     override def getSource[T]()(implicit system: ActorSystem, tag: ClassTag[T]): Source[T, _] = {
