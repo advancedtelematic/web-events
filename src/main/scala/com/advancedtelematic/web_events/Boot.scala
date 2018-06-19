@@ -33,9 +33,6 @@ trait Messages {
     implicit val packageIdDecoder: Decoder[PackageId] = deriveDecoder
   }
 
-  implicit val eventEncoder: Encoder[Event] = deriveEncoder
-  implicit val eventDecoder: Decoder[Event] = deriveDecoder
-
   case class DeviceSeen(namespace: String, uuid: String, lastSeen: String)
   case class DeviceCreated(namespace: String, uuid: String, deviceName: String, deviceId: Option[String],
                            deviceType: String, timestamp: String)
@@ -46,8 +43,8 @@ trait Messages {
   case class PackageBlacklisted(namespace: String, packageId: PackageId, timestamp: String)
   case class UpdateSpec(namespace: String, device: String, packageUuid: String, status: String, timestamp: String)
   case class TufTargetAdded(namespace: String, filename: String, checksum: Json, length: Long, custom: Option[Json])
-  case class DeviceEventMessage(namespace: String, event: Event)
-  case class Event(deviceUuid: String, eventId: String, eventType: String, deviceTime: Instant, receivedAt: Instant, payload: Json)
+  case class DeviceEventMessage(namespace: String, deviceUuid: String, eventId: String, eventType: String,
+                                deviceTime: Instant, receivedAt: Instant, payload: Json)
 
   implicit val deviceSeenMessageLike = MessageLike[DeviceSeen](_.uuid)
   implicit val deviceCreatedMessageLike = MessageLike[DeviceCreated](_.uuid)
@@ -57,7 +54,7 @@ trait Messages {
   implicit val blacklistedPackageMessageLike = MessageLike[PackageBlacklisted](_.packageId.mkString)
   implicit val updateSpecMessageLike = MessageLike[UpdateSpec](_.device.toString)
   implicit val tufTargetAddedMessageLike = MessageLike[TufTargetAdded](_.filename)
-  implicit val deviceEventMessageLike = MessageLike[DeviceEventMessage](_.event.deviceUuid)
+  implicit val deviceEventMessageLike = MessageLike[DeviceEventMessage](_.namespace)
 }
 
 trait Settings {
