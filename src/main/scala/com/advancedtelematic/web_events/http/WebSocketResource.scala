@@ -13,8 +13,9 @@ import com.advancedtelematic.web_events._
 import scala.concurrent.ExecutionContext
 
 class WebSocketResource(messageBusProvider: MessageSourceProvider)
-                       (implicit system: ActorSystem, ec: ExecutionContext, mat: Materializer) extends Messages {
+                       (implicit system: ActorSystem, ec: ExecutionContext, mat: Materializer) {
 
+  import Messages._
   import akka.http.scaladsl.server.Directives._
 
   def wsFlow(namespace: Namespace): Flow[Message, Message, Any] = {

@@ -22,15 +22,16 @@ import com.advancedtelematic.libats.messaging_datatype.MessageLike
 import com.advancedtelematic.util.ResourceSpec
 import com.advancedtelematic.web_events.daemon.MessageSourceProvider
 import com.typesafe.config.ConfigFactory
-import io.circe.Json
+import io.circe.{Decoder, Json}
 import org.apache.commons.codec.binary.Base64
 import org.scalatest.{FunSuite, Matchers}
 import org.scalatest.concurrent.ScalaFutures
-
+import Messages._
 import scala.reflect.ClassTag
 import shapeless._
+import cats.syntax.either._
 
-class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures with ResourceSpec with Messages {
+class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures with ResourceSpec {
   val deviceUuid = "77a1888b-9bc8-4673-8f23-a51240303db4"
   val nonMatchingDeviceUuid = "99a1888b-9bc8-4673-8f23-a51240303db4"
   val deviceName = "testDevice"
@@ -40,7 +41,7 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
   val deviceType = "Vehicle"
   val packageId = PackageId("ghc", "1.0.0")
   val packageUuid = "b82ca6a4-5422-47e0-85d0-8f931006a307"
-  val cksum = Json.obj("hash" -> Json.fromString("1234"))
+  val checksum = Json.obj("hash" -> Json.fromString("1234"))
   val eventUuid = "0d438395-73fa-438d-8a91-5a29515083e9"
 
   val deviceSeenMessage = DeviceSeen(namespace, deviceUuid, lastSeen)
@@ -50,8 +51,8 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
   val updateSpecMessage = UpdateSpec(namespace, deviceUuid, packageUuid, "Finished", "now")
   val packageBlacklistedMessage = PackageBlacklisted(namespace, packageId, "now")
   val packageCreatedMessage = PackageCreated(namespace, packageId, Some("description"), Some("ghc"), None, "now")
-  val tufTargetAddedMessage = TufTargetAdded(namespace, "targetpath1", cksum, 1024, None)
-  val deviceEventMessage = DeviceEventMessage(namespace, deviceUuid, eventUuid, "packageadded", Instant.now(), Instant.now(), Json.Null)
+  val tufTargetAddedMessage = TufTargetAdded(namespace, "targetpath1", checksum, 1024, None)
+  val deviceEventMessage = DeviceEventMessage(namespace, deviceUuid, eventUuid, Json.fromString("packageadded"), Instant.now(), Instant.now(), Json.Null)
 
   val mockMsgSrc = new MessageSourceProvider {
     override def getSource[T]()(implicit system: ActorSystem, tag: ClassTag[T]): Source[T, _] = {
@@ -128,5 +129,18 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
       wsClient.sendCompletion()
       wsClient.expectCompletion()
     }
+  }
+
+  test("can decode device event") {
+    implicit val decoder = Messages.deviceEventMessageLike.decoder
+
+    val rawEvent =
+      """
+        |{"deviceUuid":"341a66bd-0dc7-4b25-93f4-f76171be4136","eventId":"73b7230b-abf2-4065-a1b4-d1948cdfef44","eventType":{"id":"DownloadComplete","version":1},"deviceTime":"2018-06-19T13:21:44Z","receivedAt":"2018-06-19T13:21:44.953Z","payload":"{\"signatures\":[{\"keyid\":\"ebe6e42bf62f4f951174c86792822c705dbefeb3328158769d5a9c47327e851a\",\"method\":\"rsassa-pss-sha256\",\"sig\":\"dwLpDBhHr5bx2yphcTqrm1VMClUQHZR4DTKO5pJ96DQFQhqP1DnkedEJNI6LgFlJZx5IabEJ/CcbMzY4plVM1beRKfora1/F879CEeRn2stSKroL35sdsBuV+gR2x9qGOsOexS7L4gQkR10HCcmwjqQfuoDuSc0jqkE6/Wcp0p7LWfdwi951Zk+S4FdVGkJmVdgC8szQfz/gu9UEOv3Jb9bVLxErSkcSboYenabIZs+9cndEtcA3cTu5FP0SVKJJnYN2UfN4VyD6/yCyGezIb/R4v9fOsukgS1T0fjhZSi6HAfK/dRhuGt5toGxbiROZE5HfRpi/dhavWb2GAmFGqw==\"}],\"signed\":{\"_type\":\"Targets\",\"expires\":\"2018-07-20T13:21:39Z\",\"targets\":{\"qemu_rocko-1ded2a7ea8c29c6472d9523aeef38f592316474bfcb69e6662e5da1b17fac0c1\":{\"hashes\":{\"sha256\":\"1ded2a7ea8c29c6472d9523aeef38f592316474bfcb69e6662e5da1b17fac0c1\"},\"length\":0,\"custom\":{\"ecuIdentifier\":\"c98184937d6ff299b2458539086132894785cf4031f217ef5348c7168d2b53c3\",\"hardwareId\":\"qemux86-64\",\"uri\":\"\",\"diff\":null,\"ecuIdentifiers\":{\"c98184937d6ff299b2458539086132894785cf4031f217ef5348c7168d2b53c3\":{\"hardwareId\":\"qemux86-64\",\"uri\":\"\",\"diff\":null}}}}},\"version\":15}}","namespace":"auth0|..."}
+      """.stripMargin
+
+    val rawJson = io.circe.parser.parse(rawEvent).valueOr(throw _)
+
+    rawJson.as[DeviceEventMessage].valueOr(throw _) shouldBe a[DeviceEventMessage]
   }
 }

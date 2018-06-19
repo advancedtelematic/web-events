@@ -20,7 +20,7 @@ import io.circe.generic.semiauto._
 import io.circe.java8.time._
 
 // simpler versions of the messages with stringly types
-trait Messages {
+object Messages {
   case class PackageId(name: String, version: String) {
     def mkString: String = s"$name-$version"
   }
@@ -43,7 +43,7 @@ trait Messages {
   case class PackageBlacklisted(namespace: String, packageId: PackageId, timestamp: String)
   case class UpdateSpec(namespace: String, device: String, packageUuid: String, status: String, timestamp: String)
   case class TufTargetAdded(namespace: String, filename: String, checksum: Json, length: Long, custom: Option[Json])
-  case class DeviceEventMessage(namespace: String, deviceUuid: String, eventId: String, eventType: String,
+  case class DeviceEventMessage(namespace: String, deviceUuid: String, eventId: String, eventType: Json,
                                 deviceTime: Instant, receivedAt: Instant, payload: Json)
 
   implicit val deviceSeenMessageLike = MessageLike[DeviceSeen](_.uuid)
@@ -74,8 +74,9 @@ object Boot extends BootApp
   with Directives
   with Settings
   with VersionInfo
-  with MetricsSupport
-  with Messages {
+  with MetricsSupport {
+
+  import Messages._
 
   // SI-1938
   override lazy val config = ConfigFactory.load()
