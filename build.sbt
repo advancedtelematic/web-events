@@ -9,11 +9,11 @@ resolvers += "ATS Releases" at "http://nexus.advancedtelematic.com:8081/content/
 resolvers += "ATS Snapshots" at "http://nexus.advancedtelematic.com:8081/content/repositories/snapshots"
 
 libraryDependencies ++= {
-  val akkaV = "2.5.7"
-  val akkaHttpV = "10.0.10"
+  val akkaV = "2.5.13"
+  val akkaHttpV = "10.1.1"
   val scalaTestV = "3.0.4"
-  val libatsV = "0.1.1-1-gf9dc44c"
-  val jwsV = "0.4.5"
+  val libatsV = "0.1.2-15-g3c1cdd2"
+  val jwsV = "0.4.5-2-gaabd5ef"
 
   Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaV,
@@ -34,7 +34,7 @@ libraryDependencies ++= {
   )
 }
 
-dependencyOverrides += "com.typesafe.akka" %% "akka-stream-kafka" % "0.18"
+dependencyOverrides += "com.typesafe.akka" %% "akka-stream-kafka" % "0.22"
 
 enablePlugins(BuildInfoPlugin)
 
