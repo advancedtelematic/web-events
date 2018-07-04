@@ -13,6 +13,8 @@ import com.advancedtelematic.libats.messaging.MessageListener
 import com.advancedtelematic.libats.messaging_datatype.MessageLike
 import com.advancedtelematic.web_events.daemon.WebMessageBusListener
 import com.advancedtelematic.libats.messaging.daemon.MessageBusListenerActor.Subscribe
+import com.advancedtelematic.metrics.prometheus.{PrometheusMetricsRoutes, PrometheusMetricsSupport}
+import com.advancedtelematic.metrics.{AkkaHttpRequestMetrics, InfluxdbMetricsReporterSupport}
 import com.advancedtelematic.web_events.http.WebEventsRoutes
 import com.typesafe.config.ConfigFactory
 import io.circe.{Decoder, Encoder, Json}
@@ -74,7 +76,10 @@ object Boot extends BootApp
   with Directives
   with Settings
   with VersionInfo
-  with MetricsSupport {
+  with MetricsSupport
+  with InfluxdbMetricsReporterSupport
+  with AkkaHttpRequestMetrics
+  with PrometheusMetricsSupport {
 
   import Messages._
 
@@ -102,7 +107,8 @@ object Boot extends BootApp
   ).foreach { case (ml, name) => startListener(name)(ml) }
 
   val routes: Route =
-    (versionHeaders(version) & logResponseMetrics(projectName)) {
+    (versionHeaders(version) & requestMetrics(metricRegistry) & logResponseMetrics(projectName)) {
+      prometheusMetricsRoutes ~
       new WebEventsRoutes().routes
     }
 
