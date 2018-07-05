@@ -28,6 +28,9 @@ libraryDependencies ++= {
     "com.advancedtelematic" %% "libats" % libatsV,
     "com.advancedtelematic" %% "libats-messaging" % libatsV,
     "com.advancedtelematic" %% "libats-messaging-datatype" % libatsV,
+    "com.advancedtelematic" %% "libats-metrics" % libatsV,
+    "com.advancedtelematic" %% "libats-metrics-akka" % libatsV,
+    "com.advancedtelematic" %% "libats-metrics-prometheus" % libatsV,
     "com.advancedtelematic" %% "jw-security-core" % jwsV,
     "com.advancedtelematic" %% "jw-security-jca" % jwsV,
     "commons-codec" % "commons-codec" % "1.10"
