@@ -10,15 +10,14 @@ import com.advancedtelematic.libats.http.LogDirectives.logResponseMetrics
 import com.advancedtelematic.libats.http.VersionDirectives.versionHeaders
 import com.advancedtelematic.libats.http.monitoring.MetricsSupport
 import com.advancedtelematic.libats.messaging.MessageListener
-import com.advancedtelematic.libats.messaging_datatype.MessageLike
-import com.advancedtelematic.web_events.daemon.WebMessageBusListener
 import com.advancedtelematic.libats.messaging.daemon.MessageBusListenerActor.Subscribe
-import com.advancedtelematic.metrics.prometheus.{PrometheusMetricsRoutes, PrometheusMetricsSupport}
+import com.advancedtelematic.libats.messaging_datatype.MessageLike
+import com.advancedtelematic.metrics.prometheus.PrometheusMetricsSupport
 import com.advancedtelematic.metrics.{AkkaHttpRequestMetrics, InfluxdbMetricsReporterSupport}
+import com.advancedtelematic.web_events.daemon.WebMessageBusListener
 import com.advancedtelematic.web_events.http.WebEventsRoutes
 import com.typesafe.config.ConfigFactory
-import io.circe.{Decoder, Encoder, Json}
-import io.circe.generic.semiauto._
+import io.circe.Json
 import io.circe.java8.time._
 
 // simpler versions of the messages with stringly types

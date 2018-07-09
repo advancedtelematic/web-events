@@ -22,7 +22,7 @@ import com.advancedtelematic.libats.messaging_datatype.MessageLike
 import com.advancedtelematic.util.ResourceSpec
 import com.advancedtelematic.web_events.daemon.MessageSourceProvider
 import com.typesafe.config.ConfigFactory
-import io.circe.{Decoder, Json}
+import io.circe.Json
 import org.apache.commons.codec.binary.Base64
 import org.scalatest.{FunSuite, Matchers}
 import org.scalatest.concurrent.ScalaFutures
