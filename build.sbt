@@ -12,7 +12,7 @@ libraryDependencies ++= {
   val akkaV = "2.5.13"
   val akkaHttpV = "10.1.1"
   val scalaTestV = "3.0.4"
-  val libatsV = "0.1.2-15-g3c1cdd2"
+  val libatsV = "0.1.2-18-gdfb0eb3"
   val jwsV = "0.4.5-2-gaabd5ef"
 
   Seq(
