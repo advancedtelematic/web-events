@@ -1,6 +1,5 @@
 import sbtrelease.ReleaseStateTransformations.{setReleaseVersion => _, _}
 import sbt.Keys._
-import sbt._
 import com.typesafe.sbt.SbtNativePackager.Docker
 
 import sbtrelease.ReleasePlugin.autoImport._

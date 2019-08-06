@@ -30,7 +30,7 @@ class WebSocketResource(messageBusProvider: MessageSourceProvider)
         .map(js => TextMessage(js.noSpaces))
     }
 
-    val sources = getSource[DeviceSeen](_.namespace)
+    val source = getSource[DeviceSeen](_.namespace)
       .merge(getSource[DeviceCreated](_.namespace))
       .merge(getSource[DeviceSystemInfoChanged](_.namespace))
       .merge(getSource[DeviceUpdateStatus](_.namespace))
@@ -40,10 +40,10 @@ class WebSocketResource(messageBusProvider: MessageSourceProvider)
       .merge(getSource[UpdateSpec](_.namespace))
       .merge(getSource[DeviceEventMessage](_.namespace))
 
-    Flow.fromSinkAndSource(Sink.ignore, sources)
+    Flow.fromSinkAndSource(Sink.ignore, source)
   }
 
-  val tokenValidator = (new BasicAuthTokenValidator()).fromConfig()
+  val tokenValidator = new BasicAuthTokenValidator().fromConfig()
 
   val route = tokenValidator { ns =>
     path("events" / "ws") {

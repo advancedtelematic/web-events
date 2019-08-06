@@ -1,19 +1,10 @@
-addSbtPlugin("io.spray" % "sbt-revolver" % "0.8.0")
-
-addSbtPlugin("org.flywaydb" % "flyway-sbt" % "4.0.3")
-
-resolvers += "Flyway" at "https://flywaydb.org/repo"
-
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.6.1")
-
-addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.4")
-
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.8.5")
-
-addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.3")
-
-addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.8.0")
-
-addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "0.2.1")
-
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.8.2")
+addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.1")
+addSbtPlugin("org.flywaydb" % "flyway-sbt" % "4.2.0")
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.9.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.21")
+addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.0")
+addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.11")
+addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
+addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "0.2.10")
+addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
+resolvers += "Flyway" at "https://davidmweber.github.io/flyway-sbt.repo"

@@ -132,8 +132,6 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
   }
 
   test("can decode device event") {
-    implicit val decoder = Messages.deviceEventMessageLike.decoder
-
     val rawEvent =
       """
         |{"deviceUuid":"341a66bd-0dc7-4b25-93f4-f76171be4136","eventId":"73b7230b-abf2-4065-a1b4-d1948cdfef44","eventType":{"id":"DownloadComplete","version":1},"deviceTime":"2018-06-19T13:21:44Z","receivedAt":"2018-06-19T13:21:44.953Z","payload":"{\"signatures\":[{\"keyid\":\"ebe6e42bf62f4f951174c86792822c705dbefeb3328158769d5a9c47327e851a\",\"method\":\"rsassa-pss-sha256\",\"sig\":\"dwLpDBhHr5bx2yphcTqrm1VMClUQHZR4DTKO5pJ96DQFQhqP1DnkedEJNI6LgFlJZx5IabEJ/CcbMzY4plVM1beRKfora1/F879CEeRn2stSKroL35sdsBuV+gR2x9qGOsOexS7L4gQkR10HCcmwjqQfuoDuSc0jqkE6/Wcp0p7LWfdwi951Zk+S4FdVGkJmVdgC8szQfz/gu9UEOv3Jb9bVLxErSkcSboYenabIZs+9cndEtcA3cTu5FP0SVKJJnYN2UfN4VyD6/yCyGezIb/R4v9fOsukgS1T0fjhZSi6HAfK/dRhuGt5toGxbiROZE5HfRpi/dhavWb2GAmFGqw==\"}],\"signed\":{\"_type\":\"Targets\",\"expires\":\"2018-07-20T13:21:39Z\",\"targets\":{\"qemu_rocko-1ded2a7ea8c29c6472d9523aeef38f592316474bfcb69e6662e5da1b17fac0c1\":{\"hashes\":{\"sha256\":\"1ded2a7ea8c29c6472d9523aeef38f592316474bfcb69e6662e5da1b17fac0c1\"},\"length\":0,\"custom\":{\"ecuIdentifier\":\"c98184937d6ff299b2458539086132894785cf4031f217ef5348c7168d2b53c3\",\"hardwareId\":\"qemux86-64\",\"uri\":\"\",\"diff\":null,\"ecuIdentifiers\":{\"c98184937d6ff299b2458539086132894785cf4031f217ef5348c7168d2b53c3\":{\"hardwareId\":\"qemux86-64\",\"uri\":\"\",\"diff\":null}}}}},\"version\":15}}","namespace":"auth0|..."}
