@@ -93,7 +93,7 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
       Subject(namespace),
       Audience(Set("audience")),
       Instant.now().minusSeconds(120.longValue()), Instant.now().plusSeconds(120.longValue()),
-      Scope(Set("scope")))
+      Scope(Set(s"namespace.$namespace")))
     val key = new SecretKeySpec(Base64.decodeBase64(config.getString("auth.token.secret")), "HMAC")
     val potKeyInfo = KeyInfo[SecretKey, Octet, Sign :: Verify :: HNil, Hmac.HS256 :: HNil](key)
     val keyInfo = potKeyInfo.right.get

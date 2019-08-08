@@ -162,7 +162,19 @@ class BasicAuthTokenValidator(implicit system: ActorSystem, mat: Materializer) e
             provide(defaultNamespace)
           case "local" =>
             logger.info("Will verify tokens locally")
-            localValidate.map(token => Namespace(token.subject.underlying))
+            localValidate.flatMap { token =>
+              val maybeNs = token.scope.underlying
+                .find(_.startsWith("namespace."))
+                .map(_.stripPrefix("namespace."))
+              maybeNs match {
+                case Some(ns) =>
+                  logger.debug(s"Extracted namespace $ns.")
+                  provide(Namespace(ns))
+                case None =>
+                  logger.error("No namespace found in the token scope.")
+                  failWith(Errors.scopeLacksNamespace(token.scope.underlying))
+              }
+            }
           case "auth-plus" =>
             logger.info("Will verify tokens with auth-plus")
             authPlusValidate.map(token => Namespace(token.subject.underlying))
