@@ -17,8 +17,8 @@ import com.advancedtelematic.metrics.{AkkaHttpRequestMetrics, InfluxdbMetricsRep
 import com.advancedtelematic.web_events.daemon.WebMessageBusListener
 import com.advancedtelematic.web_events.http.WebEventsRoutes
 import com.typesafe.config.ConfigFactory
-import io.circe.Json
-import io.circe.java8.time._
+import io.circe.{Decoder, Encoder, Json}
+import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 
 // simpler versions of the messages with stringly types
 object Messages {
@@ -46,6 +46,25 @@ object Messages {
   case class TufTargetAdded(namespace: String, filename: String, checksum: Json, length: Long, custom: Option[Json])
   case class DeviceEventMessage(namespace: String, deviceUuid: String, eventId: String, eventType: Json,
                                 deviceTime: Instant, receivedAt: Instant, payload: Json)
+
+  implicit val deviceSeenEncoder: Encoder[DeviceSeen] = deriveEncoder
+  implicit val deviceSeenDecoder: Decoder[DeviceSeen] = deriveDecoder
+  implicit val deviceCreatedEncoder: Encoder[DeviceCreated] = deriveEncoder
+  implicit val deviceCreatedDecoder: Decoder[DeviceCreated] = deriveDecoder
+  implicit val deviceSystemInfoChangedEncoder: Encoder[DeviceSystemInfoChanged] = deriveEncoder
+  implicit val deviceSystemInfoChangedDecoder: Decoder[DeviceSystemInfoChanged] = deriveDecoder
+  implicit val deviceUpdateStatusEncoder: Encoder[DeviceUpdateStatus] = deriveEncoder
+  implicit val deviceUpdateStatusDecoder: Decoder[DeviceUpdateStatus] = deriveDecoder
+  implicit val packageCreatedEncoder: Encoder[PackageCreated] = deriveEncoder
+  implicit val packageCreatedDecoder: Decoder[PackageCreated] = deriveDecoder
+  implicit val packageBlacklistedEncoder: Encoder[PackageBlacklisted] = deriveEncoder
+  implicit val packageBlacklistedDecoder: Decoder[PackageBlacklisted] = deriveDecoder
+  implicit val updateSpecEncoder: Encoder[UpdateSpec] = deriveEncoder
+  implicit val updateSpecDecoder: Decoder[UpdateSpec] = deriveDecoder
+  implicit val tufTargetAddedEncoder: Encoder[TufTargetAdded] = deriveEncoder
+  implicit val tufTargetAddedDecoder: Decoder[TufTargetAdded] = deriveDecoder
+  implicit val deviceEventMessageEncoder: Encoder[DeviceEventMessage] = deriveEncoder
+  implicit val deviceEventMessageDecoder: Decoder[DeviceEventMessage] = deriveDecoder
 
   implicit val deviceSeenMessageLike = MessageLike[DeviceSeen](_.uuid)
   implicit val deviceCreatedMessageLike = MessageLike[DeviceCreated](_.uuid)

@@ -1,6 +1,6 @@
 name := "web-events"
 organization := "com.advancedtelematic"
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.9"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8", "-Ypartial-unification")
 
@@ -9,17 +9,18 @@ resolvers += "ATS Releases" at "http://nexus.advancedtelematic.com:8081/content/
 resolvers += "ATS Snapshots" at "http://nexus.advancedtelematic.com:8081/content/repositories/snapshots"
 
 libraryDependencies ++= {
-  val akkaV = "2.5.13"
-  val akkaHttpV = "10.1.1"
-  val scalaTestV = "3.0.4"
-  val libatsV = "0.1.2-15-g3c1cdd2"
-  val jwsV = "0.4.5-2-gaabd5ef"
+  val akkaV = "2.5.23"
+  val akkaHttpV = "10.1.8"
+  val scalaTestV = "3.0.8"
+  val libatsV = "0.3.0-30-g256438b"
+  val jwsV = "0.4.5-7-g0239acb"
 
   Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaV,
     "com.typesafe.akka" %% "akka-stream" % akkaV,
+    "com.typesafe.akka" %% "akka-stream-testkit" % akkaV % Test,
     "com.typesafe.akka" %% "akka-http-core" % akkaHttpV,
-    "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpV % "test",
+    "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpV % Test,
     "com.typesafe.akka" %% "akka-slf4j" % akkaV,
     "org.scalatest"     %% "scalatest" % scalaTestV % "test",
 
@@ -33,7 +34,7 @@ libraryDependencies ++= {
     "com.advancedtelematic" %% "libats-metrics-prometheus" % libatsV,
     "com.advancedtelematic" %% "jw-security-core" % jwsV,
     "com.advancedtelematic" %% "jw-security-jca" % jwsV,
-    "commons-codec" % "commons-codec" % "1.10"
+    "commons-codec" % "commons-codec" % "1.12"
   )
 }
 
