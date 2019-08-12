@@ -11,7 +11,7 @@ object WebMessageBusListener {
   private val log = LoggerFactory.getLogger(this.getClass)
 
   def action[T <: AnyRef](msg: T)(implicit ml: MessageLike[T], system: ActorSystem): Future[Done] = {
-    log.info(s"Received ${ml.streamName} -> ${ml.id(msg)}, publishing to akka event stream")
+    log.debug(s"Received ${ml.streamName} -> ${ml.id(msg)}, publishing to akka event stream")
     system.eventStream.publish(msg)
     Future.successful(Done)
   }
