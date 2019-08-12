@@ -32,6 +32,7 @@ libraryDependencies ++= {
     "com.advancedtelematic" %% "libats-metrics" % libatsV,
     "com.advancedtelematic" %% "libats-metrics-akka" % libatsV,
     "com.advancedtelematic" %% "libats-metrics-prometheus" % libatsV,
+    "com.advancedtelematic" %% "libats-logging" % libatsV,
     "com.advancedtelematic" %% "jw-security-core" % jwsV,
     "com.advancedtelematic" %% "jw-security-jca" % jwsV,
     "commons-codec" % "commons-codec" % "1.12"
