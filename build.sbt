@@ -52,6 +52,8 @@ dockerRepository in Docker := Some("advancedtelematic")
 
 packageName in Docker := packageName.value
 
+dockerAlias := dockerAlias.value.withTag(git.gitHeadCommit.value)
+
 dockerUpdateLatest in Docker := true
 
 defaultLinuxInstallLocation in Docker := s"/opt/${moduleName.value}"
@@ -71,8 +73,4 @@ enablePlugins(JavaAppPackaging)
 
 Revolver.settings
 
-Versioning.settings
-
 Release.settings
-
-enablePlugins(Versioning.Plugin)
