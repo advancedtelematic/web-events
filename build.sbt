@@ -1,6 +1,6 @@
 name := "web-events"
 organization := "com.advancedtelematic"
-scalaVersion := "2.12.9"
+scalaVersion := "2.12.10"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8", "-Ypartial-unification")
 
@@ -9,11 +9,11 @@ resolvers += "ATS Releases" at "http://nexus.advancedtelematic.com:8081/content/
 resolvers += "ATS Snapshots" at "http://nexus.advancedtelematic.com:8081/content/repositories/snapshots"
 
 libraryDependencies ++= {
-  val akkaV = "2.5.23"
-  val akkaHttpV = "10.1.8"
+  val akkaV = "2.5.25"
+  val akkaHttpV = "10.1.10"
   val scalaTestV = "3.0.8"
-  val libatsV = "0.3.0-34-gece9e29"
-  val jwsV = "0.4.5-7-g0239acb"
+  val libatsV = "0.3.0-64-gaba8100"
+  val jwsV = "0.4.5-11-ga01793d"
 
   Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaV,
@@ -38,8 +38,6 @@ libraryDependencies ++= {
     "commons-codec" % "commons-codec" % "1.12"
   )
 }
-
-dependencyOverrides += "com.typesafe.akka" %% "akka-stream-kafka" % "0.22"
 
 enablePlugins(BuildInfoPlugin)
 
