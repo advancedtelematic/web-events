@@ -2,6 +2,7 @@ package com.advancedtelematic.web_events
 
 import java.time.Instant
 
+import akka.actor.ActorRef
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.Uri
 import akka.http.scaladsl.server.{Directives, Route}
@@ -9,11 +10,11 @@ import com.advancedtelematic.libats.http.BootApp
 import com.advancedtelematic.libats.http.LogDirectives.logResponseMetrics
 import com.advancedtelematic.libats.http.VersionDirectives.versionHeaders
 import com.advancedtelematic.libats.http.monitoring.MetricsSupport
-import com.advancedtelematic.libats.messaging.MessageListener
+import com.advancedtelematic.libats.messaging.{MessageListener, MessageListenerSupport, NoOpListenerMonitor}
 import com.advancedtelematic.libats.messaging.daemon.MessageBusListenerActor.Subscribe
 import com.advancedtelematic.libats.messaging_datatype.MessageLike
 import com.advancedtelematic.metrics.prometheus.PrometheusMetricsSupport
-import com.advancedtelematic.metrics.{AkkaHttpRequestMetrics, InfluxdbMetricsReporterSupport}
+import com.advancedtelematic.metrics.AkkaHttpRequestMetrics
 import com.advancedtelematic.web_events.daemon.WebMessageBusListener
 import com.advancedtelematic.web_events.http.WebEventsRoutes
 import com.typesafe.config.ConfigFactory
@@ -95,7 +96,7 @@ object Boot extends BootApp
   with Settings
   with VersionInfo
   with MetricsSupport
-  with InfluxdbMetricsReporterSupport
+  with MessageListenerSupport
   with AkkaHttpRequestMetrics
   with PrometheusMetricsSupport {
 
@@ -106,23 +107,20 @@ object Boot extends BootApp
 
   log.info(s"Starting $version on http://$host:$port")
 
-  def startListener[T <: AnyRef](name: String)(implicit ml: MessageLike[T]): Unit = {
-    val listener = system.actorOf(MessageListener.props[T](config,
-      WebMessageBusListener.action[T], metricRegistry), name)
-    listener ! Subscribe
-  }
+  private def listen[T <: AnyRef](implicit ml: MessageLike[T]): ActorRef =
+    startListener[T](WebMessageBusListener.action[T], NoOpListenerMonitor)
 
   List(
-    deviceSeenMessageLike -> "device-seen",
-    deviceCreatedMessageLike -> "device-created",
-    deviceSystemInfoChangedLike -> "device-system-info-changed",
-    deviceUpdateStatusMessageLike -> "device-update-status",
-    packageCreatedMessageLike -> "package-created",
-    blacklistedPackageMessageLike -> "package-blacklisted",
-    updateSpecMessageLike -> "update-spec",
-    tufTargetAddedMessageLike -> "tuf-target-added",
-    deviceEventMessageLike -> "device-event"
-  ).foreach { case (ml, name) => startListener(name)(ml) }
+    deviceSeenMessageLike,
+    deviceCreatedMessageLike,
+    deviceSystemInfoChangedLike,
+    deviceUpdateStatusMessageLike,
+    packageCreatedMessageLike,
+    blacklistedPackageMessageLike,
+    updateSpecMessageLike,
+    tufTargetAddedMessageLike,
+    deviceEventMessageLike
+  ).foreach(listen(_))
 
   val routes: Route =
     (versionHeaders(version) & requestMetrics(metricRegistry) & logResponseMetrics(projectName)) {
