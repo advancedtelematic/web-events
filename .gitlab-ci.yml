@@ -79,4 +79,4 @@ trigger sit deploy:
 
 include:
   - project: olp/edge/ota/infra/security
-    file: /gitlab-ci.yml
+    file: /shared.yaml
