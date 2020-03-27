@@ -2,12 +2,10 @@ stages:
   - test
   - build image
   - trigger deploy
-  - perform veracode scan
   - prepare veracode scan
   - submit veracode scan
   - prepare coverage report
   - perform deps scan
-  - publish deps scan
   - publish pages
 
 variables:
@@ -19,7 +17,7 @@ test:
     - docker-sock
   image: advancedtelematic/gitlab-jobs:0.2.3
   script:
-    - sbt -sbt-dir ./.sbt -ivy ./.ivy2 -J-Xmx1G -J-XX:MaxPermSize=256m -J-XX:ReservedCodeCacheSize=128m clean test
+    - sbt -sbt-dir ./.sbt -ivy ./.ivy2 -J-Xmx1G -J-XX:MaxPermSize=256m -J-XX:ReservedCodeCacheSize=128m clean coverage test
   cache:
     paths:
       - .ivy2/
