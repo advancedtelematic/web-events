@@ -3,8 +3,12 @@ stages:
   - build image
   - trigger deploy
   - perform veracode scan
+  - prepare veracode scan
+  - submit veracode scan
+  - prepare coverage report
   - perform deps scan
   - publish deps scan
+  - publish pages
 
 variables:
   VAULT_ADDR: "http://vault.sit-ota.aws.in.here.com"
