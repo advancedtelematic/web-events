@@ -4,7 +4,6 @@ stages:
   - trigger deploy
   - prepare veracode scan
   - submit veracode scan
-  - prepare coverage report
   - perform deps scan
   - publish pages
 
@@ -13,6 +12,7 @@ variables:
 
 test:
   stage: test
+  extends: .report_scala_coverage
   tags:
     - docker-sock
   image: advancedtelematic/gitlab-jobs:0.2.3
