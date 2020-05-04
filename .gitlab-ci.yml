@@ -9,15 +9,19 @@ stages:
 
 variables:
   VAULT_ADDR: "http://vault.sit-ota.aws.in.here.com"
+  SONAR_USER_HOME: $CI_PROJECT_DIR/.caches/sonar
 
 test:
   stage: test
   extends: .report_scala_coverage
-  tags:
-    - docker-sock
   image: advancedtelematic/gitlab-jobs:0.2.3
   script:
-    - sbt -sbt-dir ./.sbt -ivy ./.ivy2 -J-Xmx1G -J-XX:MaxPermSize=256m -J-XX:ReservedCodeCacheSize=128m clean coverage test
+    - sbt -sbt-dir ./.sbt -ivy ./.ivy2 -J-Xmx1G -J-XX:MaxPermSize=256m -J-XX:ReservedCodeCacheSize=128m clean coverageOn "testOnly -- -u test_reports" coverageOff coverageReport sonarScan
+  artifacts:
+    paths:
+      - test_reports
+    reports:
+      junit: test_reports/*.xml
   cache:
     paths:
       - .ivy2/
