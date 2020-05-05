@@ -39,6 +39,17 @@ libraryDependencies ++= {
   )
 }
 
+sonarProperties ++= Map(
+  "sonar.projectName" -> "OTA Connect Web Events",
+  "sonar.projectKey" -> "ota-connect-web-events",
+  "sonar.host.url" -> "http://sonar.in.here.com",
+  "sonar.links.issue" -> "https://saeljira.it.here.com/projects/OTA/issues",
+  "sonar.links.scm" -> "https://main.gitlab.in.here.com/olp/edge/ota/connect/back-end/web-events",
+  "sonar.links.ci" -> "https://main.gitlab.in.here.com/olp/edge/ota/connect/back-end/web-events/pipelines",
+  "sonar.projectVersion" -> version.value,
+  "sonar.language" -> "scala")
+
+
 enablePlugins(BuildInfoPlugin)
 
 buildInfoOptions += BuildInfoOption.ToMap
