@@ -11,19 +11,24 @@ variables:
 
 test:
   stage: test
-  extends: .report_scala_coverage
-  image: advancedtelematic/gitlab-jobs:0.2.3
+  image: advancedtelematic/gitlab-jobs:0.2.4
   script:
-    - sbt -sbt-dir ./.sbt -ivy ./.ivy2 -J-Xmx1G -J-XX:MaxPermSize=256m -J-XX:ReservedCodeCacheSize=128m clean coverageOn "testOnly -- -u test_reports" coverageOff coverageReport sonarScan
+    - sbt -sbt-dir ./.sbt -ivy ./.ivy2 -J-Xmx1G -J-XX:ReservedCodeCacheSize=128m clean coverage "testOnly -- -u test_reports"
   artifacts:
     paths:
       - test_reports
+      - "target/scala-*/scoverage-data"
+      - "target/scala-*/src_managed"
     reports:
       junit: test_reports/*.xml
   cache:
     paths:
       - .ivy2/
       - .sbt/
+
+code coverage:
+  extends: .report_scala_coverage
+  image: advancedtelematic/gitlab-jobs:0.2.4
 
 build docker image:
   stage: build image
@@ -42,7 +47,7 @@ build docker image:
     - env | sort
     - export VAULT_TOKEN=$(cat /opt/vault/token)
     - gitlab-docker-login $VAULT_ADDR
-    - sbt -x -sbt-dir ./.sbt -ivy ./.ivy2 -batch docker:publish -J-Xmx1G -J-XX:MaxPermSize=256m -J-XX:ReservedCodeCacheSize=128m -Dsbt.log.noformat=true
+    - sbt -x -sbt-dir ./.sbt -ivy ./.ivy2 -batch docker:publish -J-Xmx1G -J-XX:ReservedCodeCacheSize=128m -Dsbt.log.noformat=true
   cache:
     paths:
       - .ivy2/
@@ -81,5 +86,5 @@ trigger sit deploy:
 
 include:
   - project: olp/edge/ota/infra/security
-    ref: v0.0.3
+    ref: v0.0.4
     file: /shared.yaml
