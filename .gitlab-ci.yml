@@ -86,5 +86,5 @@ trigger sit deploy:
 
 include:
   - project: olp/edge/ota/infra/security
-    ref: v0.0.4
+    ref: v0.0.5
     file: /shared.yaml
