@@ -9,12 +9,11 @@ import akka.http.scaladsl.server.{Directives, Route}
 import com.advancedtelematic.libats.http.BootApp
 import com.advancedtelematic.libats.http.LogDirectives.logResponseMetrics
 import com.advancedtelematic.libats.http.VersionDirectives.versionHeaders
-import com.advancedtelematic.libats.http.monitoring.MetricsSupport
 import com.advancedtelematic.libats.messaging.{MessageListener, MessageListenerSupport, NoOpListenerMonitor}
 import com.advancedtelematic.libats.messaging.daemon.MessageBusListenerActor.Subscribe
 import com.advancedtelematic.libats.messaging_datatype.MessageLike
 import com.advancedtelematic.metrics.prometheus.PrometheusMetricsSupport
-import com.advancedtelematic.metrics.AkkaHttpRequestMetrics
+import com.advancedtelematic.metrics.{AkkaHttpRequestMetrics, MetricsSupport}
 import com.advancedtelematic.web_events.daemon.WebMessageBusListener
 import com.advancedtelematic.web_events.http.WebEventsRoutes
 import com.typesafe.config.ConfigFactory
