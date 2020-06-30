@@ -8,10 +8,12 @@ stages:
 variables:
   VAULT_ADDR: "http://vault.sit-ota.aws.in.here.com"
   SONAR_USER_HOME: $CI_PROJECT_DIR/.caches/sonar
+  # The same image have to be used by test and code coverage jobs:
+  TEST_IMAGE: advancedtelematic/gitlab-jobs:0.2.4
 
 test:
   stage: test
-  image: advancedtelematic/gitlab-jobs:0.2.4
+  image: $TEST_IMAGE
   script:
     - sbt -sbt-dir ./.sbt -ivy ./.ivy2 -J-Xmx1G -J-XX:ReservedCodeCacheSize=128m clean coverage "testOnly -- -u test_reports"
   artifacts:
@@ -28,7 +30,7 @@ test:
 
 code coverage:
   extends: .report_scala_coverage
-  image: advancedtelematic/gitlab-jobs:0.2.4
+  image: $TEST_IMAGE
 
 build docker image:
   stage: build image
@@ -88,5 +90,5 @@ trigger sit deploy:
 
 include:
   - project: olp/edge/ota/infra/security
-    ref: v0.0.5
+    ref: v0.0.7
     file: /shared.yaml
