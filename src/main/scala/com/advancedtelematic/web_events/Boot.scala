@@ -41,7 +41,7 @@ object Messages {
   case class DeviceUpdateStatus(namespace: String, device: String, status: String, timestamp: String)
   case class PackageCreated(namespace: String, packageId: PackageId, description: Option[String],
                             vendor: Option[String], signature: Option[String], timestamp: String)
-  case class PackageBlacklisted(namespace: String, packageId: PackageId, timestamp: String)
+  case class PackageBlocklisted(namespace: String, packageId: PackageId, timestamp: String)
   case class UpdateSpec(namespace: String, device: String, packageUuid: String, status: String, timestamp: String)
   case class TufTargetAdded(namespace: String, filename: String, checksum: Json, length: Long, custom: Option[Json])
   case class DeviceEventMessage(namespace: String, deviceUuid: String, eventId: String, eventType: Json,
@@ -57,8 +57,8 @@ object Messages {
   implicit val deviceUpdateStatusDecoder: Decoder[DeviceUpdateStatus] = deriveDecoder
   implicit val packageCreatedEncoder: Encoder[PackageCreated] = deriveEncoder
   implicit val packageCreatedDecoder: Decoder[PackageCreated] = deriveDecoder
-  implicit val packageBlacklistedEncoder: Encoder[PackageBlacklisted] = deriveEncoder
-  implicit val packageBlacklistedDecoder: Decoder[PackageBlacklisted] = deriveDecoder
+  implicit val packageBlocklistedEncoder: Encoder[PackageBlocklisted] = deriveEncoder
+  implicit val packageBlocklistedDecoder: Decoder[PackageBlocklisted] = deriveDecoder
   implicit val updateSpecEncoder: Encoder[UpdateSpec] = deriveEncoder
   implicit val updateSpecDecoder: Decoder[UpdateSpec] = deriveDecoder
   implicit val tufTargetAddedEncoder: Encoder[TufTargetAdded] = deriveEncoder
@@ -71,8 +71,8 @@ object Messages {
   implicit val deviceSystemInfoChangedLike = MessageLike[DeviceSystemInfoChanged](_.uuid)
   implicit val deviceUpdateStatusMessageLike = MessageLike[DeviceUpdateStatus](_.device)
   implicit val packageCreatedMessageLike = MessageLike[PackageCreated](_.packageId.mkString)
-  implicit val blacklistedPackageMessageLike = MessageLike[PackageBlacklisted](_.packageId.mkString)
-  implicit val updateSpecMessageLike = MessageLike[UpdateSpec](_.device.toString)
+  implicit val blocklistedPackageMessageLike = MessageLike[PackageBlocklisted](_.packageId.mkString)
+  implicit val updateSpecMessageLike = MessageLike[UpdateSpec](_.device)
   implicit val tufTargetAddedMessageLike = MessageLike[TufTargetAdded](_.filename)
   implicit val deviceEventMessageLike = MessageLike[DeviceEventMessage](_.namespace)
 }
@@ -115,7 +115,7 @@ object Boot extends BootApp
     deviceSystemInfoChangedLike,
     deviceUpdateStatusMessageLike,
     packageCreatedMessageLike,
-    blacklistedPackageMessageLike,
+    blocklistedPackageMessageLike,
     updateSpecMessageLike,
     tufTargetAddedMessageLike,
     deviceEventMessageLike
