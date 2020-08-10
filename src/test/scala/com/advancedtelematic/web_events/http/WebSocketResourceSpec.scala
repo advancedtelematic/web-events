@@ -49,7 +49,7 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
   val deviceSystemInfoChangedMessage = DeviceSystemInfoChanged(namespace, deviceUuid)
   val deviceUpdateStatusMessage = DeviceUpdateStatus(namespace, deviceUuid, "UpToDate", "now")
   val updateSpecMessage = UpdateSpec(namespace, deviceUuid, packageUuid, "Finished", "now")
-  val packageBlacklistedMessage = PackageBlacklisted(namespace, packageId, "now")
+  val packageBlocklistedMessage = PackageBlocklisted(namespace, packageId, "now")
   val packageCreatedMessage = PackageCreated(namespace, packageId, Some("description"), Some("ghc"), None, "now")
   val tufTargetAddedMessage = TufTargetAdded(namespace, "targetpath1", checksum, 1024, None)
   val deviceEventMessage = DeviceEventMessage(namespace, deviceUuid, eventUuid, Json.fromString("packageadded"), Instant.now(), Instant.now(), Json.Null)
@@ -68,8 +68,8 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
         Source.single(deviceUpdateStatusMessage.asInstanceOf[T])
       } else if(is[UpdateSpec]) {
         Source.single(updateSpecMessage.asInstanceOf[T])
-      } else if(is[PackageBlacklisted]) {
-        Source.single(packageBlacklistedMessage.asInstanceOf[T])
+      } else if(is[PackageBlocklisted]) {
+        Source.single(packageBlocklistedMessage.asInstanceOf[T])
       } else if(is[PackageCreated]) {
         Source.single(packageCreatedMessage.asInstanceOf[T])
       } else if(is[TufTargetAdded]) {
@@ -121,7 +121,7 @@ class WebSocketResourceSpec extends FunSuite with Matchers with ScalaFutures wit
                               makeJson(deviceSystemInfoChangedMessage),
                               makeJson(deviceUpdateStatusMessage),
                               makeJson(updateSpecMessage),
-                              makeJson(packageBlacklistedMessage),
+                              makeJson(packageBlocklistedMessage),
                               makeJson(packageCreatedMessage),
                               makeJson(tufTargetAddedMessage),
                               makeJson(deviceEventMessage))
