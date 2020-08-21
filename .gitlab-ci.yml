@@ -9,7 +9,7 @@ variables:
   VAULT_ADDR: "http://vault.sit-ota.aws.in.here.com"
   SONAR_USER_HOME: $CI_PROJECT_DIR/.caches/sonar
   # The same image have to be used by test and code coverage jobs:
-  TEST_IMAGE: advancedtelematic/gitlab-jobs:0.2.4
+  TEST_IMAGE: advancedtelematic/gitlab-jobs:0.2.5
 
 test:
   stage: test
@@ -44,7 +44,7 @@ build docker image:
       - /^deploy/.*$/
   tags:
     - docker-sock
-  image: advancedtelematic/gitlab-jobs:0.2.3
+  image: advancedtelematic/gitlab-jobs:0.2.5
   script:
     - env | sort
     - export VAULT_TOKEN=$(cat /opt/vault/token)
@@ -64,7 +64,7 @@ trigger dev deploy:
   variables:
     ENV: "dev"
     NEW_TAG: $CI_COMMIT_SHA
-    SERVICE: web-events
+    SERVICE: $CI_PROJECT_NAME
     CREATE_COMMIT: "true"
     UPSTREAM_COMMIT_MESSAGE: $CI_COMMIT_MESSAGE
   trigger:
@@ -80,7 +80,7 @@ trigger sit deploy:
   variables:
     ENV: "sit"
     NEW_TAG: $CI_COMMIT_SHA
-    SERVICE: web-events
+    SERVICE: $CI_PROJECT_NAME
     CREATE_COMMIT: "true"
     UPSTREAM_COMMIT_MESSAGE: $CI_COMMIT_MESSAGE
   trigger:
@@ -93,5 +93,5 @@ include:
   - template: Secret-Detection.gitlab-ci.yml
   - template: License-Scanning.gitlab-ci.yml
   - project: olp/edge/ota/infra/security
-    ref: v0.0.7
+    ref: v0.0.9
     file: /shared.yaml
