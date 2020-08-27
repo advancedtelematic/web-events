@@ -1,4 +1,4 @@
-# ATS web-events
+# HERE web-events
 
 A service for publishing events in a namespace via websockets.
 
