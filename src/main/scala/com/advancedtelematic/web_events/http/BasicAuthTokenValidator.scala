@@ -38,30 +38,8 @@ object BasicAuthTokenValidator {
 }
 
 class BasicAuthTokenValidator(implicit system: ActorSystem, mat: Materializer) extends Settings {
-  import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
   import BasicAuthTokenValidator.logger
   import Directives._
-  import Json._
-
-  private def authPlusCheckToken(token: String)(
-      implicit ec: ExecutionContext): Future[Boolean] = {
-    import StatusCodes._
-    val uri = authPlusUri.withPath(Uri("/introspect").path)
-    val entity = HttpEntity(`application/json`, fromString(token).noSpaces)
-    val form = Multipart.FormData(Map("token" -> entity))
-    val request = Post(uri, form) ~> Authorization(
-      BasicHttpCredentials(clientId, clientSecret))
-
-    for {
-      response <- Http().singleRequest(request)
-      status <- response.status match {
-        case OK =>
-          Unmarshal(response.entity).to[ValidationResponse].map(_.active)
-        case _ =>
-          FastFuture.failed(new Throwable(s"auth-plus doesn't return OK: ${response.toString}"))
-      }
-    } yield status
-  }
 
   def parseJwt(input: String)(
       implicit decoder: Decoder[JsonWebToken]): Either[String, JsonWebToken] =
@@ -79,28 +57,6 @@ class BasicAuthTokenValidator(implicit system: ActorSystem, mat: Materializer) e
       case _ =>
         reject(AuthenticationFailedRejection(CredentialsMissing, HttpChallenges.basic(realm)))
     }
-
-  def authPlusValidate: Directive1[JsonWebToken] =
-    validate("auth-plus").flatMap { token =>
-      extractExecutionContext.flatMap { implicit ec =>
-        onComplete(authPlusCheckToken(token)) flatMap {
-          case Success(true) =>
-            logger.info(s"Token was successfully verified via auth-plus")
-            parseJwt(token) match {
-              case Right(jwt) => provide(jwt)
-              case Left(msg) =>
-                logger.info(s"Token parse error: $msg")
-                reject(AuthorizationFailedRejection)
-            }
-          case Success(false) =>
-            logger.info("auth-plus rejects the token")
-            reject(AuthorizationFailedRejection)
-          case Failure(err) =>
-            logger.info(s"Couldn't connect with auth-plus (will try local validation): ${err.toString}")
-            localValidate
-        }
-      }
-  }
 
   private[this] def authenticateToken(serializedToken: String,
                                       verifySignatureFn: Jws.JwsVerifier): Either[String, JsonWebToken] = {
@@ -175,9 +131,6 @@ class BasicAuthTokenValidator(implicit system: ActorSystem, mat: Materializer) e
                   failWith(Errors.scopeLacksNamespace(token.scope.underlying))
               }
             }
-          case "auth-plus" =>
-            logger.info("Will verify tokens with auth-plus")
-            authPlusValidate.map(token => Namespace(token.subject.underlying))
         }
     }
   }

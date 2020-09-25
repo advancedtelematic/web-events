@@ -85,9 +85,6 @@ trait Settings {
 
   val authProtocol = config.getString("auth.protocol")
   val shouldVerify = config.getString("auth.verification")
-  lazy val authPlusUri = Uri(config.getString("authplus.api.uri"))
-  lazy val clientId = config.getString("authplus.client.id")
-  lazy val clientSecret = config.getString("authplus.client.secret")
 }
 
 object Boot extends BootApp
