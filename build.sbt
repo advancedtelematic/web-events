@@ -81,6 +81,7 @@ dockerCommands := Seq(
 )
 
 enablePlugins(JavaAppPackaging)
+enablePlugins(GitVersioning)
 
 Revolver.settings
 
