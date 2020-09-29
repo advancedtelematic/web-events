@@ -1,35 +1,25 @@
 package com.advancedtelematic.web_events.http
 
 import java.time.Instant
-import javax.crypto.SecretKey
-import javax.crypto.spec.SecretKeySpec
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.client.RequestBuilding._
-import akka.http.scaladsl.model.ContentTypes._
-import akka.http.scaladsl.model.headers.{Authorization, BasicHttpCredentials, HttpChallenge, HttpChallenges}
-import akka.http.scaladsl.model.{HttpEntity, Multipart, StatusCodes, Uri}
+import akka.http.scaladsl.model.headers.{BasicHttpCredentials, HttpChallenge, HttpChallenges}
 import akka.http.scaladsl.server.AuthenticationFailedRejection.{CredentialsMissing, CredentialsRejected}
 import akka.http.scaladsl.server._
-import akka.http.scaladsl.unmarshalling.Unmarshal
-import akka.http.scaladsl.util.FastFuture
 import akka.stream.Materializer
 import cats.syntax.either._
 import com.advancedtelematic.jwa.HS256
 import com.advancedtelematic.jws.Jws
-import com.typesafe.config.ConfigException
-import io.circe.generic.auto._
-import io.circe.parser.decode
-import io.circe.{Decoder, Json}
-import org.apache.commons.codec.binary.Base64
-import org.slf4j.LoggerFactory
 import com.advancedtelematic.jwt.JsonWebToken
 import com.advancedtelematic.libats.data.DataType.Namespace
 import com.advancedtelematic.web_events.Settings
-
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import com.typesafe.config.ConfigException
+import io.circe.Decoder
+import io.circe.parser.decode
+import javax.crypto.SecretKey
+import javax.crypto.spec.SecretKeySpec
+import org.apache.commons.codec.binary.Base64
+import org.slf4j.LoggerFactory
 
 case class ValidationResponse(active: Boolean)
 
