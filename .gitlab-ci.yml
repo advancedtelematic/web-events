@@ -14,6 +14,9 @@ variables:
 
 test:
   stage: test
+  except:
+    refs:
+      - deploy/sit
   image: $TEST_IMAGE
   script:
     - sbt -sbt-dir ./.sbt -ivy ./.ivy2 -J-Xmx1G -J-XX:ReservedCodeCacheSize=128m clean coverage "testOnly -- -u test_reports"
@@ -32,6 +35,9 @@ test:
 
 code coverage:
   extends: .report_scala_coverage
+  except:
+    refs:
+      - deploy/sit
   image: $TEST_IMAGE_SONAR
 
 build docker image:
