@@ -9,10 +9,10 @@ resolvers += "ATS Releases" at "https://nexus.ota.here.com/content/repositories/
 resolvers += "ATS Snapshots" at "https://nexus.ota.here.com/content/repositories/snapshots"
 
 libraryDependencies ++= {
-  val akkaV = "2.5.25"
-  val akkaHttpV = "10.1.10"
+  val akkaV = "2.6.5"
+  val akkaHttpV = "10.1.12"
   val scalaTestV = "3.0.8"
-  val libatsV = "0.3.0-109-ge12f057"
+  val libatsV = "0.4.1-2-gf689d68"
   val jwsV = "0.4.5-11-ga01793d"
 
   Seq(
@@ -24,7 +24,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-slf4j" % akkaV,
     "org.scalatest"     %% "scalatest" % scalaTestV % "test",
 
-    "ch.qos.logback" % "logback-classic" % "1.2.3",
+    "ch.qos.logback" % "logback-classic" % "1.2.10",
 
     "com.advancedtelematic" %% "libats" % libatsV,
     "com.advancedtelematic" %% "libats-messaging" % libatsV,
@@ -46,7 +46,7 @@ sonarProperties ++= Map(
   "sonar.links.issue" -> "https://saeljira.it.here.com/projects/OTA/issues",
   "sonar.links.scm" -> "https://main.gitlab.in.here.com/olp/edge/ota/connect/back-end/web-events",
   "sonar.links.ci" -> "https://main.gitlab.in.here.com/olp/edge/ota/connect/back-end/web-events/pipelines",
-  "sonar.java.binaries" -> "./target/scala-*/classes", 
+  "sonar.java.binaries" -> "./target/scala-*/classes",
   "sonar.scala.coverage.reportPaths"->"target/scala-2.12/scoverage-report/scoverage.xml",
   "sonar.projectVersion" -> version.value,
   "sonar.language" -> "scala")
