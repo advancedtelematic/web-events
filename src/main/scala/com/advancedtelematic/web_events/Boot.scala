@@ -104,7 +104,7 @@ object Boot extends BootApp
   log.info(s"Starting $version on http://$host:$port")
 
   private def listen[T <: AnyRef](implicit ml: MessageLike[T]): ActorRef =
-    startListener[T](WebMessageBusListener.action[T], NoOpListenerMonitor)
+    startListener[T](WebMessageBusListener.action[T], NoOpListenerMonitor, useCommittableSource = false)
 
   List(
     deviceSeenMessageLike,
